@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goal : MonoBehaviour
+public class ResetZone : MonoBehaviour
 {
     public FrisbeeRelease m_frisbeeRelease;
-    public GameObject m_firework;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Frisbee")
         {
-            m_firework.SetActive(true);
+            m_frisbeeRelease.PlaceInHand();
 
             Frisbee frisbee = other.GetComponent<Frisbee>();
             if (frisbee)
-            {
-                frisbee.OnGoal();
-                m_frisbeeRelease.PlaceInHand();
-            }
+                frisbee.OnReset();
         }
     }
 }

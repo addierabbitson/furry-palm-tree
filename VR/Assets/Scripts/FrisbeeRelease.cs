@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FrisbeeRelease : MonoBehaviour
 {
-    public GameObject m_frisbee;
+    public Frisbee m_frisbee;
     public Transform m_anchor;
     public float m_throwStrength;
     public float m_shootStrength;
@@ -34,32 +34,56 @@ public class FrisbeeRelease : MonoBehaviour
 
         if ((m_inHand && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) || (m_inHand && m_test))
         {
-            m_frisbee.transform.parent = null;
-            m_frisbeeRigidbody.isKinematic = false;
-            if (m_controllerMovement)
-            {
-                m_frisbeeRigidbody.velocity = (m_frisbee.transform.position - m_lastPos) * m_throwStrength;
-            }
-            else
-            {
-                m_frisbeeRigidbody.velocity = m_controller.forward * m_shootStrength;
-            }
-
-            m_inHand = false;
-            m_test = false; 
+            Release();
         }
         else if ((!m_inHand && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) || (!m_inHand && m_test))
         {
-            m_frisbeeRigidbody.isKinematic = true;
-            m_frisbeeRigidbody.velocity = Vector3.zero;
-
-            m_frisbee.transform.parent = m_anchor;
-            m_frisbee.transform.localPosition = m_startPos;
-
-            m_inHand = true;
-            m_test = false;
+            PlaceInHand();
         }
 
         m_lastPos = m_frisbee.transform.position;
+    }
+
+    public void Release()
+    {
+        m_frisbee.transform.parent = null;
+        m_frisbeeRigidbody.isKinematic = false;
+        if (m_controllerMovement)
+        {
+            float forwardSpeed = m_frisbee.transform.position.z - m_lastPos.z;
+            float sideSpeed = m_frisbee.transform.position.x - m_lastPos.x;
+
+            Vector3 newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2);
+
+            m_frisbeeRigidbody.velocity = newVelocity * m_throwStrength;
+            m_frisbee.m_initialVelocity = newVelocity * m_throwStrength;
+        }
+        else
+        {
+            m_frisbeeRigidbody.velocity = m_controller.forward * m_shootStrength;
+            m_frisbee.m_initialVelocity = m_controller.forward * m_shootStrength;
+        }
+
+        m_frisbee.m_trail.gameObject.SetActive(true);
+        m_frisbee.OnThrow();
+
+        m_inHand = false;
+        m_test = false;
+    }
+
+    public void PlaceInHand()
+    {
+        m_frisbeeRigidbody.isKinematic = true;
+        m_frisbeeRigidbody.velocity = Vector3.zero;
+
+        m_frisbee.transform.parent = m_anchor;
+        m_frisbee.transform.localPosition = m_startPos;
+        m_frisbee.transform.localRotation = Quaternion.identity;
+
+        m_frisbee.m_trail.gameObject.SetActive(false);
+        m_frisbee.m_trail.Clear();
+
+        m_inHand = true;
+        m_test = false;
     }
 }
