@@ -6,6 +6,7 @@ public class Firework : MonoBehaviour
 {
     public ParticleSystem m_thrust;
     public ParticleSystem m_explosion;
+    public Renderer m_renderer;
 
     public float m_length;
     public float m_speed;
@@ -34,6 +35,7 @@ public class Firework : MonoBehaviour
         else if (!m_exploded)
         {
             m_thrust.Stop();
+            m_renderer.enabled = false;
             m_explosion.Play();
             m_exploded = true;
         }            
@@ -42,6 +44,7 @@ public class Firework : MonoBehaviour
     private void OnEnable()
     {
         transform.position = m_startPos;
+        m_renderer.enabled = true;
         m_timer = 0;
         m_exploded = false;
         m_thrust.Play();

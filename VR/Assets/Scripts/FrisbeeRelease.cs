@@ -6,7 +6,6 @@ public class FrisbeeRelease : MonoBehaviour
 {
     public Frisbee m_frisbee;
     public Transform m_anchor;
-    public float m_throwStrength;
     public float m_shootStrength;
     public bool m_test;
     public Transform m_controller;
@@ -53,10 +52,10 @@ public class FrisbeeRelease : MonoBehaviour
             float forwardSpeed = m_frisbee.transform.position.z - m_lastPos.z;
             float sideSpeed = m_frisbee.transform.position.x - m_lastPos.x;
 
-            Vector3 newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2);
+            Vector3 newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;
 
-            m_frisbeeRigidbody.velocity = newVelocity * m_throwStrength;
-            m_frisbee.m_initialVelocity = newVelocity * m_throwStrength;
+            m_frisbeeRigidbody.velocity = newVelocity;
+            m_frisbee.m_initialVelocity = newVelocity;
         }
         else
         {

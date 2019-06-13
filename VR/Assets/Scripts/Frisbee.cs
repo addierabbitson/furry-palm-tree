@@ -7,6 +7,7 @@ public class Frisbee : MonoBehaviour
 {
     public TrailRenderer m_trail;
     public Vector3 m_initialVelocity;
+    public FrisbeeRelease m_frisbeeRelease;
     public float m_curveStrength;
     public bool m_useTimer;
     public float m_curveLength;
@@ -57,6 +58,7 @@ public class Frisbee : MonoBehaviour
             {
                 //float deviation = m_goal.position.x - transform.position.x;
                 m_rigidbody.AddForce(new Vector3(m_deviation, 0, 0).normalized * m_curveStrength);
+                //m_rigidbody.AddForce(new Vector3(m_curveStrength, 0, 0));
             }
         }
     }
@@ -64,6 +66,9 @@ public class Frisbee : MonoBehaviour
     public void OnThrow()
     {
         m_deviation = -m_initialVelocity.x;
+        m_curveStrength = transform.localRotation.eulerAngles.z;
+        m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength;
+        m_curveStrength = 3 + (m_curveStrength / 180 * 5);
         m_active = true;
         m_curveTimer = 0;
     }
