@@ -6,9 +6,10 @@ public class FrisbeeRelease : MonoBehaviour
 {
     public Frisbee m_frisbee;
     public Transform m_anchor;
-    public float m_shootStrength;
-    public bool m_test;
     public Transform m_controller;
+    public float m_releaseThreshold;
+    public bool m_test;
+    public float m_shootStrength;
     public bool m_controllerMovement;
 
     Rigidbody m_frisbeeRigidbody;
@@ -32,12 +33,13 @@ public class FrisbeeRelease : MonoBehaviour
         }
 
         if ((m_inHand && OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) || (m_inHand && m_test))
-        {
+        {            
             Release();
         }
         else if ((!m_inHand && OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) || (!m_inHand && m_test))
         {
             PlaceInHand();
+            m_frisbee.OnReset();
         }
 
         m_lastPos = m_frisbee.transform.position;
@@ -45,29 +47,33 @@ public class FrisbeeRelease : MonoBehaviour
 
     public void Release()
     {
-        m_frisbee.transform.parent = null;
-        m_frisbeeRigidbody.isKinematic = false;
+        Vector3 newVelocity;
         if (m_controllerMovement)
         {
             float forwardSpeed = m_frisbee.transform.position.z - m_lastPos.z;
             float sideSpeed = m_frisbee.transform.position.x - m_lastPos.x;
 
-            Vector3 newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;
-
-            m_frisbeeRigidbody.velocity = newVelocity;
-            m_frisbee.m_initialVelocity = newVelocity;
+            newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;            
         }
         else
         {
-            m_frisbeeRigidbody.velocity = m_controller.forward * m_shootStrength;
-            m_frisbee.m_initialVelocity = m_controller.forward * m_shootStrength;
+            newVelocity = m_controller.forward * m_shootStrength;
         }
 
-        m_frisbee.m_trail.gameObject.SetActive(true);
-        m_frisbee.OnThrow();
+        if (newVelocity.sqrMagnitude >= m_releaseThreshold * m_releaseThreshold && newVelocity.z > 0)
+        {
+            m_frisbeeRigidbody.velocity = newVelocity;
+            m_frisbee.m_initialVelocity = newVelocity;
 
-        m_inHand = false;
-        m_test = false;
+            m_frisbee.transform.parent = null;
+            m_frisbeeRigidbody.isKinematic = false;
+
+            m_frisbee.m_trail.gameObject.SetActive(true);
+            m_frisbee.OnThrow();
+
+            m_inHand = false;
+            m_test = false;
+        }
     }
 
     public void PlaceInHand()

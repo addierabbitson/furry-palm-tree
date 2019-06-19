@@ -13,6 +13,7 @@ public class Frisbee : MonoBehaviour
     public float m_curveLength;
     public int m_score;
     public int m_combo;
+    public int m_misses;
 
     Rigidbody m_rigidbody;
     float m_curveTimer;
@@ -67,7 +68,12 @@ public class Frisbee : MonoBehaviour
     {
         m_deviation = -m_initialVelocity.x;
         m_curveStrength = transform.localRotation.eulerAngles.z;
-        m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength;
+
+        if (m_deviation < 0)
+            m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength;
+        else
+            m_curveStrength = m_curveStrength > 180 ? -(m_curveStrength - 360) : -m_curveStrength;
+
         m_curveStrength = 3 + (m_curveStrength / 180 * 5);
         m_active = true;
         m_curveTimer = 0;
@@ -82,5 +88,6 @@ public class Frisbee : MonoBehaviour
     public void OnReset()
     {
         m_combo = 0;
+        m_misses++;
     }
 }
