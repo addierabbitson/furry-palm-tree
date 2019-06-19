@@ -12,7 +12,7 @@ public class Wind : MonoBehaviour
     {
         if (other.tag == "Frisbee")
         {
-            m_frisbee = other.GetComponent<Frisbee>();
+            m_frisbee = other.GetComponent<Frisbee>(); // caches the frisbee
         }
     }
 
@@ -20,7 +20,7 @@ public class Wind : MonoBehaviour
     {
         if (other.tag == "Frisbee")
         {
-            m_frisbee.Rigidbody.AddForce(m_windStrength);
+            m_frisbee.Rigidbody.AddForce(m_windStrength); // applies constant force to the frisbee
         }
     }
 
@@ -28,7 +28,7 @@ public class Wind : MonoBehaviour
     {
         if (other.tag == "Frisbee")
         {
-            m_frisbee = null;
+            m_frisbee = null; // clears the frisbee cache
         }
     }
 }

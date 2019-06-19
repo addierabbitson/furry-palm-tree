@@ -50,8 +50,10 @@ public class Frisbee : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // if the deviation force should be applied
         if (m_active)
         {
+            // once the velocity of the rigidbody reaches the negative value of the initial velocity stop applying the deviation
             if (m_initialVelocity.x < 0 && m_rigidbody.velocity.x >= -m_initialVelocity.x)
             {
                 m_active = false;
@@ -61,50 +63,64 @@ public class Frisbee : MonoBehaviour
                 m_active = false;
             }
 
+            // if the rigidbody is not in hand
             if (!m_rigidbody.isKinematic)
-            {
-                //float deviation = m_goal.position.x - transform.position.x;
-                m_rigidbody.AddForce(new Vector3(m_deviation, 0, 0).normalized * m_curveStrength);
-                //m_rigidbody.AddForce(new Vector3(m_curveStrength, 0, 0));
+            {                
+                m_rigidbody.AddForce(new Vector3(m_deviation, 0, 0).normalized * m_curveStrength); // apply constance force in the opposite direction of the initial velocity            
             }
         }
     }
 
+    /// <summary>
+    /// Handles setting up the frisbee for flight
+    /// </summary>
     public void OnThrow()
     {
-        m_deviation = -m_initialVelocity.x;
-        m_curveStrength = transform.localRotation.eulerAngles.z;
+        m_deviation = -m_initialVelocity.x; // the deviation is responsible for giving the frisbee a curve in it's flight path
 
+        // Depending on the rotation of the frisbee the strength of the curve will be increased/decreased
+        m_curveStrength = transform.localRotation.eulerAngles.z;
         if (m_deviation < 0)
-            m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength;
+            m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength; // gets the angle between [-180, 180]
         else
-            m_curveStrength = m_curveStrength > 180 ? -(m_curveStrength - 360) : -m_curveStrength;
+            m_curveStrength = m_curveStrength > 180 ? -(m_curveStrength - 360) : -m_curveStrength; // gets the angle between [-180, 180]
 
         m_curveStrength = 3 + (m_curveStrength / 180 * 5);
         m_active = true;
 
+        // Activate trails
         foreach (TrailRenderer trail in m_trails)
         {
             trail.gameObject.SetActive(true);
         }
+        // Activate particles
         foreach (ParticleSystem particle in m_particles)
         {
             particle.gameObject.SetActive(true);
         }
     }
 
+    /// <summary>
+    /// Increases the score and combo on a goal
+    /// </summary>
     public void OnGoal()
     {
         m_score++;
         m_combo++;
     }
 
+    /// <summary>
+    /// Ends the combo and increases the misses on reset
+    /// </summary>
     public void OnReset()
     {
         m_combo = 0;
         m_misses++;
     }
 
+    /// <summary>
+    /// Disables the trails and particles when the frisbee is placed back in hand
+    /// </summary>
     public void OnInHand()
     {
         foreach (TrailRenderer trail in m_trails)

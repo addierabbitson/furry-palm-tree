@@ -10,14 +10,15 @@ public class Goal : MonoBehaviour
     {
         if (other.tag == "Frisbee")
         {
+            // Sets off the fireworks
             foreach(GameObject firework in m_fireworks)
                 firework.SetActive(true);
 
             Frisbee frisbee = other.GetComponent<Frisbee>();
             if (frisbee)
             {
-                frisbee.OnGoal();
-                frisbee.m_frisbeeRelease.PlaceInHand();
+                frisbee.OnGoal(); // increases the score
+                frisbee.m_frisbeeRelease.PlaceInHand(); // places the frisbee back inhand
             }
         }
     }

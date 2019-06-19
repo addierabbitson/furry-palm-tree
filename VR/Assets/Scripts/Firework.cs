@@ -23,24 +23,27 @@ public class Firework : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_timer < m_length)
+        if (m_timer < m_length) // while the timer is still going
         {
             m_timer += Time.deltaTime;
-            transform.position += new Vector3(0, m_speed, 0) * Time.deltaTime;
+            transform.position += new Vector3(0, m_speed, 0) * Time.deltaTime; // move the firework linearly upwards
         }
-        else if (m_exploded && m_explosion.isStopped)
+        else if (m_exploded && m_explosion.isStopped) // if the firework has exploded
         {
             gameObject.SetActive(false);
         }
-        else if (!m_exploded)
+        else if (!m_exploded) // if the timer is finished
         {
-            m_thrust.Stop();
-            m_renderer.enabled = false;
-            m_explosion.Play();
+            m_thrust.Stop(); // stop the thrust particles 
+            m_renderer.enabled = false; // disable the body
+            m_explosion.Play(); // play the explosion
             m_exploded = true;
         }            
     }
 
+    /// <summary>
+    /// Resets the firework
+    /// </summary>
     private void OnEnable()
     {
         transform.position = m_startPos;

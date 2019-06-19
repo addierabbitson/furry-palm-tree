@@ -17,6 +17,6 @@ public class ScoreDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_text.text = m_frisbee.Score.ToString() + ":" + m_frisbee.Misses.ToString();
+        m_text.text = m_frisbee.Score.ToString() + ":" + m_frisbee.Misses.ToString(); // displays the stats of the frisbee in the format [SCORE:MISSESs]
     }
 }

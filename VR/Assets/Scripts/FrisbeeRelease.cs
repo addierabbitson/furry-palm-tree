@@ -6,7 +6,6 @@ public class FrisbeeRelease : MonoBehaviour
 {
     public Frisbee m_frisbee;
     public Transform m_anchor;
-    public Transform m_controller;
     public float m_releaseThreshold;
     public bool m_test;
     public float m_shootStrength;
@@ -40,21 +39,26 @@ public class FrisbeeRelease : MonoBehaviour
         m_lastPos = m_frisbee.transform.position;
     }
 
+    /// <summary>
+    /// Detatches the frisbee from the player and uses it's last position and current position to calculate the desired velocity
+    /// </summary>
     public void Release()
     {
         Vector3 newVelocity;
-        if (m_controllerMovement)
+        if (m_controllerMovement) // if using the controllers movement for the velocity
         {
+            // getting delta movement on the x and z axis
             float forwardSpeed = m_frisbee.transform.position.z - m_lastPos.z;
             float sideSpeed = m_frisbee.transform.position.x - m_lastPos.x;
 
-            newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;
+            newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime; 
         }
-        else
+        else // DEBUG fires in a direction at a set strength
         {
-            newVelocity = m_controller.forward * m_shootStrength;
+            newVelocity = m_anchor.forward * m_shootStrength;
         }
 
+        // The frisbee doesn't get released if the magnitude of the velocity is below the threshold or if it is going backwards
         if (newVelocity.sqrMagnitude >= m_releaseThreshold * m_releaseThreshold && newVelocity.z > 0)
         {
             m_frisbeeRigidbody.velocity = newVelocity;
@@ -70,6 +74,9 @@ public class FrisbeeRelease : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Places the frisbee back into the hand of the player
+    /// </summary>
     public void PlaceInHand()
     {
         m_frisbeeRigidbody.isKinematic = true;

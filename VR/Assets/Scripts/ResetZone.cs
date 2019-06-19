@@ -8,6 +8,7 @@ public class ResetZone : MonoBehaviour
     {
         if (other.tag == "Frisbee")
         {         
+            // Resets the frisbee and places it back in hand
             Frisbee frisbee = other.GetComponent<Frisbee>();
             if (frisbee)
             {
