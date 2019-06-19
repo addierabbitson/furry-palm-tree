@@ -31,11 +31,11 @@ public class FrisbeeRelease : MonoBehaviour
             m_controllerMovement = !m_controllerMovement;
         }
 
-        if ((m_inHand && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) || (m_inHand && m_test))
+        if ((m_inHand && OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) || (m_inHand && m_test))
         {
             Release();
         }
-        else if ((!m_inHand && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) || (!m_inHand && m_test))
+        else if ((!m_inHand && OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) || (!m_inHand && m_test))
         {
             PlaceInHand();
         }
