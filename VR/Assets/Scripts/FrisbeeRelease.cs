@@ -27,11 +27,6 @@ public class FrisbeeRelease : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryTouchpad))
-        {
-            m_controllerMovement = !m_controllerMovement;
-        }
-
         if ((m_inHand && OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) || (m_inHand && m_test))
         {            
             Release();
@@ -53,7 +48,7 @@ public class FrisbeeRelease : MonoBehaviour
             float forwardSpeed = m_frisbee.transform.position.z - m_lastPos.z;
             float sideSpeed = m_frisbee.transform.position.x - m_lastPos.x;
 
-            newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;            
+            newVelocity = new Vector3(sideSpeed / 2, 0, forwardSpeed * 2) / Time.deltaTime;
         }
         else
         {
@@ -63,12 +58,11 @@ public class FrisbeeRelease : MonoBehaviour
         if (newVelocity.sqrMagnitude >= m_releaseThreshold * m_releaseThreshold && newVelocity.z > 0)
         {
             m_frisbeeRigidbody.velocity = newVelocity;
-            m_frisbee.m_initialVelocity = newVelocity;
+            m_frisbee.InitialVelocity = newVelocity;
 
             m_frisbee.transform.parent = null;
             m_frisbeeRigidbody.isKinematic = false;
 
-            m_frisbee.m_trail.gameObject.SetActive(true);
             m_frisbee.OnThrow();
 
             m_inHand = false;
@@ -85,8 +79,7 @@ public class FrisbeeRelease : MonoBehaviour
         m_frisbee.transform.localPosition = m_startPos;
         m_frisbee.transform.localRotation = Quaternion.identity;
 
-        m_frisbee.m_trail.gameObject.SetActive(false);
-        m_frisbee.m_trail.Clear();
+        m_frisbee.OnInHand();
 
         m_inHand = true;
         m_test = false;
