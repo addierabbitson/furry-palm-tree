@@ -50,6 +50,9 @@ public class Frisbee : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (m_rigidbody.velocity.sqrMagnitude > 0) // faces the
+            transform.rotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized, transform.up);
+
         // if the deviation force should be applied
         if (m_active)
         {
