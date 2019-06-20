@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MovingGoal : MonoBehaviour
 {
-    public Vector3 m_start;
-    public Vector3 m_end;
+    public float m_start;
+    public float m_end;
     public float m_speed;
 
     float m_timer;
@@ -31,6 +31,6 @@ public class MovingGoal : MonoBehaviour
         if (m_timer <= 0)
             m_direction = true;
 
-        transform.position = Vector3.Lerp(m_start, m_end, m_timer / m_speed); // lerp the position between the start and end positions
+        transform.rotation = Quaternion.Euler(0, Mathf.LerpAngle(m_start, m_end, m_timer / m_speed), 0); // lerp the rotation between the start and end rotations
     }
 }

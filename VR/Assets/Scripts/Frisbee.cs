@@ -50,7 +50,7 @@ public class Frisbee : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_rigidbody.velocity.sqrMagnitude > 0) // faces the
+        if (m_rigidbody.velocity.sqrMagnitude > 0) // faces the frisbee in the direction of movement
             transform.rotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized, transform.up);
 
         // if the deviation force should be applied
@@ -69,7 +69,7 @@ public class Frisbee : MonoBehaviour
             // if the rigidbody is not in hand
             if (!m_rigidbody.isKinematic)
             {                
-                m_rigidbody.AddForce(new Vector3(m_deviation, 0, 0).normalized * m_curveStrength); // apply constance force in the opposite direction of the initial velocity            
+                m_rigidbody.AddForce(new Vector3(m_deviation, 0, 0).normalized * m_curveStrength); // apply constant force in the opposite direction of the initial velocity            
             }
         }
     }
@@ -86,7 +86,7 @@ public class Frisbee : MonoBehaviour
         if (m_deviation < 0)
             m_curveStrength = m_curveStrength > 180 ? m_curveStrength - 360 : m_curveStrength; // gets the angle between [-180, 180]
         else
-            m_curveStrength = m_curveStrength > 180 ? -(m_curveStrength - 360) : -m_curveStrength; // gets the angle between [-180, 180]
+            m_curveStrength = m_curveStrength > 180 ? -(m_curveStrength - 360) : -m_curveStrength; // gets the negative of the angle between [-180, 180]
 
         m_curveStrength = 3 + (m_curveStrength / 180 * 5);
         m_active = true;
